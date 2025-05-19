@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Moeti Collections - Sneakers, iPhones, Curtains, Carpets & More</title>
+<meta name="description" content="Shop Moeti Collections for sneakers, iPhones, frontals, curtains, carpets, blankets, clothes, perfumes, and more. Best prices. Fast delivery." />
+<meta property="og:title" content="Moeti Collections - Shop Now" />
+<meta property="og:description" content="Top deals on sneakers, electronics, home goods and more." />
+<meta property="og:image" content="https://yourdomain.com/images/logo.jpg" />
+<meta property="og:url" content="https://yourdomain.com/" />
+<meta name="twitter:card" content="summary_large_image" />
+  <style>
+    body.dark {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+    body.dark .navbar,
+    body.dark footer {
+      background-color: #1e1e1e;
+    }
+    body.dark .nav-links a {
+      color: #e0e0e0;
+    }
+    body.dark .product {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+      border-color: #333;
+    }
+    .product {
+      background: #fff;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .product:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+    #dark-mode-toggle {
+      background: none;
+      border: 2px solid #fff;
+      color: #fff;
+      padding: 0.4rem 0.6rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-left: 1rem;
+      transition: background 0.3s ease;
+    }
+    #dark-mode-toggle:hover {
+      background-color: #333;
+    }
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+      margin-top: 60px; /* to avoid content under fixed navbar */
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #111;
+      padding: 1rem;
+      color: #fff;
+      flex-wrap: wrap;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 999;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .logo img {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+    }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 4px;
+    }
+    .hamburger span {
+      width: 25px;
+      height: 3px;
+      background: #fff;
+      transition: all 0.3s ease;
+    }
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+    .cart-icon {
+      font-size: 1.2rem;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .dropdown-arrow {
+      font-size: 0.8rem;
+      color: #fff;
+      transition: transform 0.3s ease;
+    }
+    #cart-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background: white;
+      color: black;
+      width: 100vw;
+      max-width: 300px;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 1rem;
+      z-index: 1000;
+    }
+    #cart-dropdown p.empty {
+      text-align: center;
+      color: #666;
+    }
+    #cart-dropdown ul {
+      list-style: none;
+      padding-left: 0;
+      margin-bottom: 0.5rem;
+    }
+    #cart-dropdown ul li {
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 0.3rem;
+    }
+    #cart-dropdown strong {
+      display: block;
+      margin-top: 0.5rem;
+      text-align: right;
+    }
+    #product-search {
+      width: 90%;
+      max-width: 400px;
+      padding: 0.5rem;
+      margin: 1rem auto;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    .product-category {
+      padding: 2rem 1rem;
+    }
+    .product-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .product {
+      background: #fff;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      text-align: center;
+      transition: box-shadow 0.3s ease;
+    }
+    .product:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .product img {
+      width: 100%;
+      max-width: 220px;
+      height: auto;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 8px;
+      margin: 0 auto;
+      display: block;
+    }
+    .checkout {
+      padding: 2rem 1rem;
+      background: #fff;
+      border-top: 2px solid #ddd;
+    }
+    #checkout-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 500px;
+      margin: auto;
+    }
+    #checkout-form textarea {
+      height: 100px;
+      padding: 0.5rem;
+      resize: none;
+    }
+    #checkout-form input,
+    #checkout-form button {
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    #checkout-form button {
+      background: #111;
+      color: #fff;
+      cursor: pointer;
+    }
+    footer {
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+    }
+    footer a {
+      color: #1da1f2;
+      text-decoration: none;
+    }
+    #total-price {
+      font-weight: bold;
+      margin-top: 0.5rem;
+    }
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: #111;
+        position: static;
+        top: 100%;
+        left: 0;
+        padding: 1rem 0;
+        z-index: auto;
+      }
+      #cart-dropdown {
+        right: 0.5rem;
+        width: calc(100vw - 1rem);
+      }
+      .nav-links.show {
+        display: flex;
+      }
+      .hamburger {
+        display: flex;
+      }
+    }
+    @media (max-width: 768px) {
+      .product img {
+        max-width: 120px;
+      }
+    }
+    .payment-methods {
+      margin: 2rem 0;
+      text-align: center;
+    }
+    .payment-methods h3 {
+      margin-bottom: 1rem;
+      font-size: 1.15em;
+    }
+    .payment-icons {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      align-items: center;
+      justify-content: center;
+    }
+    .payment-icons li {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .payment-icons img {
+      height: 32px;
+      width: auto;
+      vertical-align: middle;
+    }
+    .spinner {
+      margin: 0 auto;
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #3a3a3a;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0%   { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">
+      <img src="/images/logo.jpg" alt="Moeti Collections Logo" />
+      Moeti Collections
+    </div>
+    <div class="hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <nav>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#sneakers">Sneakers</a></li>
+        <li><a href="#iphones">iPhones</a></li>
+        <li><a href="#frontals">Frontals</a></li>
+        <li><a href="#curtains">Curtains</a></li>
+        <li><a href="#carpets">Carpets</a></li>
+        <li><a href="#blankets">Blankets</a></li>
+        <li><a href="#clothes">Clothes</a></li>
+        <li><a href="#perfumes">Perfumes</a></li>
+      </ul>
+    </nav>
+    <div class="cart-icon" id="cart-toggle">🛒 <span id="cart-count">0</span> <span class="dropdown-arrow">▼</span></div>
+    <div id="cart-dropdown">
+      <ul id="cart-items"></ul>
+      <p id="cart-empty-msg" class="empty">Your cart is empty.</p>
+      <strong id="total-price">Total: R0</strong>
+    </div>
+    <button id="dark-mode-toggle">🌓</button>
+  </header>
+  <main>
+    <input type="text" id="product-search" placeholder="Search products..." />
+    <div id="categories-container"></div>
+  </main>
+  <section class="checkout">
+    <div id="loading" style="display:none; text-align:center;">
+      <div class="spinner"></div>
+      <div style="margin-top:10px; color:#333;">Processing your order...</div>
+    </div>
+    <form id="checkout-form" method="POST" enctype="multipart/form-data" autocomplete="off">
+      <h2>Checkout</h2>
+      <input type="email" name="email" placeholder="Your email" required />
+      <textarea name="cartDetails" id="cart-details" hidden></textarea>
+      <textarea id="special-instructions" name="specialInstructions" placeholder="Any special instructions?"></textarea>
+      <input type="file" id="upload-image" name="uploadImage" accept="image/*" required />
+      <button type="submit">Place Order</button>
+    </form>
+  </section>
+  <div class="payment-methods">
+    <h3>We Accept the Following Payment Methods:</h3>
+    <ul class="payment-icons">
+      <li><img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" title="Visa"></li>
+      <li><img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" title="Mastercard"></li>
+      <li><span style="font-size:1.1em;">💵</span> Cash on Delivery</li>
+      <li><span style="font-size:1.1em;">🏦</span> Bank Transfer</li>
+    </ul>
+  </div>
+  <footer>
+    &copy; 2025 Moeti Collections. Follow us on
+    <a href="https://instagram.com/moeticollections" target="_blank" rel="noopener noreferrer">Instagram</a>
+    created by @Phenyo Dev webhosthub.com
+  </footer>
+  <script>
+    // Hamburger toggle
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    const main = document.querySelector('main');
+    const cartToggle = document.getElementById('cart-toggle');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      navLinks.classList.toggle('show');
+      if (navLinks.classList.contains('show')) {
+        main.style.marginTop = navLinks.offsetHeight + 'px';
+      } else {
+        main.style.marginTop = '0';
+      }
+    });
+
+    // Dark mode toggle
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    darkModeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+    });
+
+    // Sample products data
+    const products = [
+      {
+        category: 'Sneakers',
+        items: [
+          { name: 'Nike Air Max 90', price: 1500, image: 'images/sneakers/sneaker1.jpg ' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker2.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker3.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker4.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker5.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker6.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker7.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker8.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker9.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker10.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker11.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker12.jpg' }
+        ]
+      },
+      {
+        category: 'iPhones',
+        items: [
+          { name: 'iPhone 14 Pro Max', price: 25000, image: 'https://upload.wikimedia.org/wikipedia/commons/3/31/IPhone_14_Pro_Max_PNG.png' },
+          { name: 'iPhone SE (2022)', price: 12000, image: 'https://upload.wikimedia.org/wikipedia/commons/e/e6/IPhone_SE_2022.png' },
+          { name: 'Nike Air Max 90', price: 1500, image: 'images/sneakers/sneaker1.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker2.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker3.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker4.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker5.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker6.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker7.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker8.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker9.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker10.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker11.jpg' },
+          { name: 'Adidas Ultraboost', price: 1800, image: 'images/sneakers/sneaker12.jpg' }
+        ]
+      },
+      {
+        category: 'Frontals',
+        items: [
+          { name: 'iPhone 14 Pro Max', price: 25000, image: 'https://upload.wikimedia.org/wikipedia/commons/3/31/IPhone_14_Pro_Max_PNG.png' },
+          { name: 'iPhone SE (2022)', price: 12000, image: 'https://upload.wikimedia.org/wikipedia/commons/e/e6/IPhone_SE_2022.png' }
+        ]
+      },
+      {
+        category: 'Curtains',
+        items: [
+          { name: 'iPhone 14 Pro Max', price: 25000, image: 'https://upload.wikimedia.org/wikipedia/commons/3/31/IPhone_14_Pro_Max_PNG.png' },
+          { name: 'iPhone SE (2022)', price: 12000, image: 'https://upload.wikimedia.org/wikipedia/commons/e/e6/IPhone_SE_2022.png' }
+        ]
+      },
+      {
+        category: 'Carpets',
+        items: [
+          { name: 'iPhone 14 Pro Max', price: 25000, image: 'https://upload.wikimedia.org/wikipedia/commons/3/31/IPhone_14_Pro_Max_PNG.png' },
+          { name: 'iPhone SE (2022)', price: 12000, image: 'https://upload.wikimedia.org/wikipedia/commons/e/e6/IPhone_SE_2022.png' }
+        ]
+      },
+      {
+        category: 'Blankets',
+        items: [
+          { name: 'iPhone 14 Pro Max', price: 25000, image: 'https://upload.wikimedia.org/wikipedia/commons/3/31/IPhone_14_Pro_Max_PNG.png' },
+          { name: 'iPhone SE (2022)', price: 12000, image: 'https://upload.wikimedia.org/wikipedia/commons/e/e6/IPhone_SE_2022.png' }
+        ]
+      },
+      {
+        category: 'Clothes',
+        items: [
+          { name: 'iPhone 14 Pro Max', price: 25000, image: 'https://upload.wikimedia.org/wikipedia/commons/3/31/IPhone_14_Pro_Max_PNG.png' },
+          { name: 'iPhone SE (2022)', price: 12000, image: 'https://upload.wikimedia.org/wikipedia/commons/e/e6/IPhone_SE_2022.png' }
+        ]
+      },
+      {
+        category: 'Perfumes',
+        items: [
+          { name: 'iPhone 14 Pro Max', price: 25000, image: 'https://upload.wikimedia.org/wikipedia/commons/3/31/IPhone_14_Pro_Max_PNG.png' },
+          { name: 'iPhone SE (2022)', price: 12000, image: 'https://upload.wikimedia.org/wikipedia/commons/e/e6/IPhone_SE_2022.png' }
+        ]
+      }
+    ];
+
+    const categoriesContainer = document.getElementById('categories-container');
+    const cartDropdown = document.getElementById('cart-dropdown');
+    const cartCount = document.getElementById('cart-count');
+    const productSearch = document.getElementById('product-search');
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    function renderCategories(filterText = '') {
+      categoriesContainer.innerHTML = '';
+
+      if (filterText.trim() === '') {
+        // No search: show all categories as usual
+        products.forEach(category => {
+          if (!category.items || category.items.length === 0) return;
+          const categorySection = document.createElement('section');
+          categorySection.className = 'product-category';
+          categorySection.id = category.category.toLowerCase();
+          const heading = document.createElement('h2');
+          heading.textContent = category.category;
+          categorySection.appendChild(heading);
+          const productList = document.createElement('div');
+          productList.className = 'product-list';
+          category.items.forEach(product => {
+            const productDiv = document.createElement('div');
+            productDiv.className = 'product';
+            productDiv.innerHTML = `
+              <img src="${product.image}" alt="${product.name}" />
+              <h3>${product.name}</h3>
+              <p>Price: R${product.price.toLocaleString()}</p>
+              <button class="add-to-cart">Add to Cart</button>
+            `;
+            productDiv.querySelector('.add-to-cart').addEventListener('click', () => {
+              addToCart(product);
+            });
+            productList.appendChild(productDiv);
+          });
+          categorySection.appendChild(productList);
+          categoriesContainer.appendChild(categorySection);
+        });
+      } else {
+        // Search: show all matches in a "Search Results" section
+        let matches = [];
+        products.forEach(category => {
+          if (!category.items) return;
+          category.items.forEach(product => {
+            if (product.name.toLowerCase().includes(filterText.toLowerCase())) {
+              matches.push({ ...product, category: category.category });
+            }
+          });
+        });
+
+        if (matches.length === 0) {
+          categoriesContainer.innerHTML = "<p style='padding:2rem;text-align:center;'>No products match your search.</p>";
+          return;
+        }
+
+        const resultsSection = document.createElement('section');
+        resultsSection.className = 'product-category';
+        resultsSection.id = 'search-results';
+        const heading = document.createElement('h2');
+        heading.textContent = `Search Results (${matches.length})`;
+        resultsSection.appendChild(heading);
+        const productList = document.createElement('div');
+        productList.className = 'product-list';
+        matches.forEach(product => {
+          const productDiv = document.createElement('div');
+          productDiv.className = 'product';
+          productDiv.innerHTML = `
+            <img src="${product.image}" alt="${product.name}" />
+            <h3>${product.name}</h3>
+            <p>Category: ${product.category}</p>
+            <p>Price: R${product.price.toLocaleString()}</p>
+            <button class="add-to-cart">Add to Cart</button>
+          `;
+          productDiv.querySelector('.add-to-cart').addEventListener('click', () => {
+            addToCart(product);
+          });
+          productList.appendChild(productDiv);
+        });
+        resultsSection.appendChild(productList);
+        categoriesContainer.appendChild(resultsSection);
+      }
+    }
+
+    // Only ONE event handler for search:
+    productSearch.addEventListener('input', (e) => {
+      const text = e.target.value.trim();
+      renderCategories(text);
+    });
+
+    function addToCart(product) {
+      cart.push(product);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cartCount.textContent = cart.length;
+      if (cart.length === 0) {
+        cartDropdown.innerHTML = '<p class="empty">Your cart is empty</p>';
+      } else {
+        let html = '<ul>';
+        cart.forEach((item) => {
+          html += `<li>${item.name} - R${item.price.toLocaleString()}</li>`;
+        });
+        html += '</ul>';
+        const total = cart.reduce((acc, cur) => acc + cur.price, 0);
+        html += `<strong>Total: R${total.toLocaleString()}</strong>`;
+        cartDropdown.innerHTML = html;
+      }
+    }
+
+    // Toggle cart dropdown when clicking cart icon
+    cartToggle.addEventListener('click', () => {
+      if (cartDropdown.style.display === 'block') {
+        cartDropdown.style.display = 'none';
+      } else {
+        cartDropdown.style.display = 'block';
+      }
+    });
+
+    // Hide cart dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.cart-icon') && !e.target.closest('#cart-dropdown')) {
+        cartDropdown.style.display = 'none';
+      }
+    });
+
+    // Handle checkout form submission
+    const checkoutForm = document.getElementById('checkout-form');
+    const loadingDiv = document.getElementById('loading');
+    checkoutForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (cart.length === 0) {
+        alert('Your cart is empty! Add some products first.');
+        return;
+      }
+      loadingDiv.style.display = 'block';
+
+      const specialInstructions = document.getElementById('special-instructions').value.trim();
+      const uploadInput = document.getElementById('upload-image');
+      const uploadedFile = uploadInput.files[0];
+      const email = checkoutForm.querySelector('input[name="email"]').value;
+
+      let orderSummary = 'Order Summary:\n\n';
+      cart.forEach(item => {
+        orderSummary += `${item.name} - R${item.price.toLocaleString()}\n`;
+      });
+      const formData = new FormData();
+      formData.append('specialInstructions', specialInstructions);
+      formData.append('uploadImage', uploadedFile);
+      formData.append('orderSummary', orderSummary);
+      formData.append('cart', JSON.stringify(cart));
+      formData.append('email', email);
+
+      try {
+        const response = await fetch('/checkout', {
+          method: 'POST',
+          body: formData,
+        });
+
+        loadingDiv.style.display = 'none';
+
+        if (response.ok) {
+          alert('Order placed!\n\n' + orderSummary);
+          clearCart();
+          checkoutForm.reset();
+        } else {
+          alert('There was an error placing your order. Please try again.');
+        }
+      } catch (error) {
+        loadingDiv.style.display = 'none';
+        alert('An unexpected error occurred.');
+      }
+    });
+
+    function clearCart() {
+      cart = [];
+      localStorage.removeItem('cart');
+      updateCartUI();
+    }
+
+    // Initial render
+    renderCategories();
+    updateCartUI();
+  </script>
+</body>
+</html>
