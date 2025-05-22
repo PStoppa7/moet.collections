@@ -11,6 +11,71 @@
 <meta property="og:url" content="https://yourdomain.com/" />
 <meta name="twitter:card" content="summary_large_image" />
   <style>
+    .toggle-category {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      font-size: 1.3rem;
+      gap: 0.5rem;
+      position: relative;
+      width: fit-content;
+       margin-bottom: 1rem;
+    }
+    .arrow-icon {
+      transition: transform 0.3s;
+      display: inline-block;
+      font-size: 1.1em;
+    }
+    .arrow-icon.open {
+      transform: rotate(90deg);
+    }
+    
+    .category-preview {
+      display: none;
+      position: absolute;
+      right: -260px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+      z-index: 200;
+      padding: 10px;
+      min-width: 200px;
+      max-width: 240px;
+      min-height: 180px;
+      text-align: center;
+    }
+     .category-preview img {
+      max-width: 220px;
+      max-height: 160px;
+      border-radius: 7px;
+      object-fit: cover;
+    }
+     .toggle-category.open + .category-preview {
+  display: block;
+  animation: slideInRight 0.4s;
+}
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(60px) translateY(-50%);}
+      to { opacity: 1; transform: translateX(0) translateY(-50%);}
+    }
+    @media (max-width: 900px) {
+      .category-preview {
+        right: 0;
+        left: 0;
+        top: 100%;
+        transform: none;
+        min-width: 90vw;
+        max-width: 95vw;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      }
+      .toggle-category.open + .category-preview {
+        animation: none;
+      }
+    }
     body.dark {
       background-color: #121212;
       color: #e0e0e0;
@@ -179,8 +244,9 @@
       font-size: 1rem;
     }
     .product-category {
-      padding: 2rem 1rem;
-    }
+  padding: 2rem 1rem;
+  position: relative; /* <-- add this line */
+}
     .product-list {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -637,8 +703,34 @@
       {
         category: 'Perfumes',
         items: [
-          { name: 'iPhone 14 Pro Max', price: 25000, image: 'https://upload.wikimedia.org/wikipedia/commons/3/31/IPhone_14_Pro_Max_PNG.png' },
-          { name: 'iPhone SE (2022)', price: 12000, image: 'https://upload.wikimedia.org/wikipedia/commons/e/e6/IPhone_SE_2022.png' }
+          { name: '', price: 25000, image: 'images/p1.jpg' },
+          { name: '', price: 12000, image: 'images/p2.jpg' },
+           { name: '', price: 25000, image: 'images/p3.jpg' },
+          { name: '', price: 12000, image: 'images/p4.jpg' }, 
+          { name: '', price: 25000, image: 'images/p5.jpg' },
+          { name: '', price: 12000, image: 'images/p6.jpg' }, 
+          { name: '', price: 25000, image: 'images/p7.jpg' },
+          { name: '', price: 12000, image: 'images/p8.jpg' },
+           { name: '', price: 25000, image: 'images/p9.jpg' },
+          { name: '', price: 12000, image: 'images/p10.jpg' },
+          { name: '', price: 25000, image: 'images/p11.jpg' },
+          { name: '', price: 12000, image: 'images/p12.jpg' },
+           { name: '', price: 25000, image: 'images/p13.jpg' },
+          { name: '', price: 12000, image: 'images/p14.jpg' }, 
+          { name: '', price: 25000, image: 'images/p15.jpg' },
+          { name: '', price: 12000, image: 'images/p16.jpg' }, 
+          { name: '', price: 25000, image: 'images/p17.jpg' },
+          { name: '', price: 12000, image: 'images/p18.jpg' },
+          { name: '', price: 12000, image: 'images/p20.jpg' },
+             { name: '', price: 25000, image: 'images/p21.jpg' },
+          { name: '', price: 12000, image: 'images/p22.jpg' },
+           { name: '', price: 25000, image: 'images/p23.jpg' },
+          { name: '', price: 12000, image: 'images/p24.jpg' }, 
+          { name: '', price: 25000, image: 'images/p25.jpg' },
+          { name: '', price: 12000, image: 'images/p26.jpg' }, 
+          { name: '', price: 25000, image: 'images/p27.jpg' },
+          { name: '', price: 12000, image: 'images/p28.jpg' },
+           { name: '', price: 25000, image: 'images/p29.jpg' }
         ]
       }
     ];
@@ -648,6 +740,8 @@
     const cartCount = document.getElementById('cart-count');
     const productSearch = document.getElementById('product-search');
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    
 
     function renderCategories(filterText = '') {
       categoriesContainer.innerHTML = '';
@@ -659,28 +753,67 @@
           const categorySection = document.createElement('section');
           categorySection.className = 'product-category';
           categorySection.id = category.category.toLowerCase();
-          const heading = document.createElement('h2');
-          heading.textContent = category.category;
-          categorySection.appendChild(heading);
-          const productList = document.createElement('div');
-          productList.className = 'product-list';
-          category.items.forEach(product => {
-            const productDiv = document.createElement('div');
-            productDiv.className = 'product';
-            productDiv.innerHTML = `
-              <img src="${product.image}" alt="${product.name}" />
-              <h3>${product.name}</h3>
-              <p>Price: R${product.price.toLocaleString()}</p>
-              <button class="add-to-cart">Add to Cart</button>
-            `;
-            productDiv.querySelector('.add-to-cart').addEventListener('click', () => {
-              addToCart(product);
+
+          // All categories arrow toggle+preview
+          
+           const toggle = document.createElement('div');
+          toggle.className = 'toggle-category';
+          toggle.tabIndex = 0;
+          toggle.setAttribute('role', 'button');
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.innerHTML = `
+            ${category.category}
+            <span class="arrow-icon">&#9654;</span>
+          `;
+
+            const preview = document.createElement('div');
+            preview.className = 'category-preview';
+           const firstImage = category.items[0] && category.items[0].image;
+            preview.innerHTML = firstImage ? `<img src="${firstImage}" alt="${category.category} Preview"/>` : `<div>No image found</div>`;
+
+            const productList = document.createElement('div');
+            productList.className = 'product-list';
+            productList.style.display = 'none';
+            category.items.forEach(product => {
+              const productDiv = document.createElement('div');
+              productDiv.className = 'product';
+              productDiv.innerHTML = `
+                <img src="${product.image}" alt="${product.name}" />
+                <h3>${product.name}</h3>
+                <p>Price: R${product.price.toLocaleString()}</p>
+                <button class="add-to-cart">Add to Cart</button>
+              `;
+              productDiv.querySelector('.add-to-cart').addEventListener('click', () => {
+                addToCart(product);
+              });
+              productList.appendChild(productDiv);
             });
-            productList.appendChild(productDiv);
-          });
-          categorySection.appendChild(productList);
-          categoriesContainer.appendChild(categorySection);
+//toggle logic
+            toggle.addEventListener('click', function() {
+              const isOpen = toggle.classList.toggle('open');
+              productList.style.display = isOpen ? '' : 'none';
+              toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+              toggle.querySelector('.arrow-icon').classList.toggle('open', isOpen);
+              if (isOpen) {
+                preview.style.display = 'block';
+              } else {
+                preview.style.display = 'none';
+              }
+            });
+
+            toggle.addEventListener('keydown', function(e) {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggle.click();
+              }
+            });
+
+            categorySection.appendChild(toggle);
+            categorySection.appendChild(preview);
+            categorySection.appendChild(productList);
+            categoriesContainer.appendChild(categorySection);
         });
+          
       } else {
         // Search: show all matches in a "Search Results" section
         let matches = [];
