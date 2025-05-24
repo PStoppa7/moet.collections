@@ -122,12 +122,13 @@
       margin: 0; padding: 0; box-sizing: border-box;
       font-family: Arial, sans-serif;
     }
-    body {
+  body {
   background-image: url("images/logo.jpg");
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center center;
   background-size: cover;
   background-attachment: fixed;
+  min-height: 100vh;
   color: #333;
   line-height: 1.6;
   margin-top: 60px; /* to avoid content under fixed navbar */
@@ -390,6 +391,21 @@
       0%   { transform: rotate(0deg);}
       100% { transform: rotate(360deg);}
     }
+    .clear-cart-btn {
+  display: block;
+  width: 70px;
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 8px 0;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.clear-cart-btn:hover {
+  background: #c0392b;
+}
   </style>
 </head>
 <body>
@@ -419,10 +435,12 @@
     <div id="cart-dropdown">
       <ul id="cart-items"></ul>
       <p id="cart-empty-msg" class="empty">Your cart is empty.</p>
+     
       <strong id="total-price">Total: R0</strong>
     </div>
     <button id="dark-mode-toggle">🌓</button>
   </header>
+  
   <main>
     <input type="text" id="product-search" placeholder="Search products..." />
     <div id="categories-container"></div>
@@ -916,6 +934,10 @@
         const total = cart.reduce((acc, cur) => acc + cur.price, 0);
         html += `<strong>Total: R${total.toLocaleString()}</strong>`;
         cartDropdown.innerHTML = html;
+        html += `<button class="clear-cart-btn" id="clear-cart-btn">Clear Cart</button>`;
+    cartDropdown.innerHTML = html;
+     document.getElementById('clear-cart-btn').addEventListener('click', clearCart);
+        
       }
     }
 
