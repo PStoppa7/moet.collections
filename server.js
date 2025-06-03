@@ -12,7 +12,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.post('/checkout', upload.single('uploadImage'), async (req, res) => {
-  let { specialInstructions, orderSummary, cart, email } = req.body;
+  // Destructure shippingMethod and pudoLocation here as well:
+  let { specialInstructions, orderSummary, cart, email, shippingMethod, pudoLocation } = req.body;
   const uploadImage = req.file;
 
   // Parse cart if it's a JSON string
@@ -29,6 +30,8 @@ app.post('/checkout', upload.single('uploadImage'), async (req, res) => {
   console.log("Order Summary:", orderSummary);
   console.log("Cart:", cart);
   console.log("Email:", email);
+  console.log("Shipping Method:", shippingMethod);
+  console.log("PUDO Location:", pudoLocation);
   console.log("Uploaded File Info:", uploadImage);
 
   const transporter = nodemailer.createTransport({
@@ -44,12 +47,17 @@ app.post('/checkout', upload.single('uploadImage'), async (req, res) => {
     ? cart.map(item => `${item.name} - R${item.price.toLocaleString()}`).join('\n')
     : String(cart);
 
+  let shippingInfoText = `Shipping Method: ${shippingMethod || 'Not specified'}`;
+  if (shippingMethod === 'pudo') {
+    shippingInfoText += `\nPUDO Location: ${pudoLocation || 'Not specified'}`;
+  }
+
   // Email to business (owner)
   const ownerMailOptions = {
     from: '"Moeti Collections" <sebogodiphenyo7@gmail.com>',
     to: 'sebogodiphenyo7@gmail.com',
     subject: 'New Order Received - Moeti Collections',
-    text: `New order received!\n\nOrder Summary:\n${orderSummary}\n\nInstructions: ${specialInstructions || "None"}\n\nCart:\n${cartDetails}\n\nCustomer email: ${email}`,
+    text: `New order received!\n\nOrder Summary:\n${orderSummary}\n\n${shippingInfoText}\n\nInstructions: ${specialInstructions || "None"}\n\nCart:\n${cartDetails}\n\nCustomer email: ${email}`,
     attachments: uploadImage
       ? [{
           filename: uploadImage.originalname,
@@ -63,7 +71,7 @@ app.post('/checkout', upload.single('uploadImage'), async (req, res) => {
     from: '"Moeti Collections" <sebogodiphenyo7@gmail.com>',
     to: email,
     subject: 'Your Order Confirmation - Moeti Collections',
-    text: `Thank you for your order!\n\nOrder Summary:\n${orderSummary}\n\nYour cart:\n${cartDetails}\n\nIf you have any questions, reply to this email.`,
+    text: `Thank you for your order!\n\nOrder Summary:\n${orderSummary}\n\n${shippingInfoText}\n\nYour cart:\n${cartDetails}\n\nIf you have any questions, reply to this email.`,
     attachments: uploadImage
       ? [{
           filename: uploadImage.originalname,
@@ -92,9 +100,8 @@ app.post('/checkout', upload.single('uploadImage'), async (req, res) => {
   }
 });
 
-// You can keep or remove /send-order if you don't use it anymore
 app.post('/send-order', upload.single('paymentProof'), async (req, res) => {
-  // No logic here, unless you use this endpoint elsewhere
+  // You can add logic here if you use this endpoint
 });
 
 app.get('/', (req, res) => {
