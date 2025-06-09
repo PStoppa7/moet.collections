@@ -203,6 +203,36 @@
       display: block;
     }
 
+    .product-image-container {
+      position: relative;
+      width: 100%;
+      max-width: 220px;
+      margin: 0 auto;
+    }
+
+    .toggle-image-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .toggle-image-btn:hover {
+      background: white;
+      transform: scale(1.1);
+    }
+
     .toggle-category {
       display: flex;
       align-items: center;
@@ -566,28 +596,124 @@
           {
             name: "Men's Sneakers",
             items: [
-              { name: 'Nike Air Max', price: 2500, image: 'images/sneakers/sneaker1.jpg' },
-              { name: 'Adidas Ultraboost', price: 2800, image: 'images/sneakers/sneaker2.jpg' },
-              { name: 'Puma RS-X', price: 2200, image: 'images/sneakers/sneaker3.jpg' },
-              { name: 'Nike Air Force 1', price: 2300, image: 'images/sneakers/sneaker4.jpg' }
+              { 
+                name: 'Nike Air Max', 
+                price: 2500, 
+                images: [
+                  'images/sneakers/sneaker1.jpg',
+                  'images/sneakers/s11.jpg'
+                ],
+                currentImageIndex: 0
+              },
+              { 
+                name: 'Adidas Ultraboost', 
+                price: 2800, 
+                images: [
+                  'images/sneakers/sneaker2.jpg',
+                  'images/sneakers/sneaker2_alt.jpg'
+                ],
+                currentImageIndex: 0
+              },
+              { 
+                name: 'Puma RS-X', 
+                price: 2200, 
+                images: [
+                  'images/sneakers/sneaker3.jpg',
+                  'images/sneakers/sneaker3_alt.jpg'
+                ],
+                currentImageIndex: 0
+              },
+              { 
+                name: 'Nike Air Force 1', 
+                price: 2300, 
+                images: [
+                  'images/sneakers/sneaker4.jpg',
+                  'images/sneakers/sneaker4_alt.jpg'
+                ],
+                currentImageIndex: 0
+              }
             ]
           },
           {
             name: "Women's Sneakers",
             items: [
-              { name: 'Nike Air Jordan', price: 2600, image: 'images/sneakers/sneaker5.jpg' },
-              { name: 'Adidas NMD', price: 2400, image: 'images/sneakers/sneaker6.jpg' },
-              { name: 'Puma Cali Sport', price: 2000, image: 'images/sneakers/sneaker7.jpg' },
-              { name: 'Nike Blazer', price: 2100, image: 'images/sneakers/sneaker8.jpg' }
+              { 
+                name: 'Nike Air Jordan', 
+                price: 2600, 
+                images: [
+                  'images/sneakers/sneaker5.jpg',
+                  'images/sneakers/sneaker5_alt.jpg'
+                ],
+                currentImageIndex: 0
+              },
+              { 
+                name: 'Adidas NMD', 
+                price: 2400, 
+                images: [
+                  'images/sneakers/sneaker6.jpg',
+                  'images/sneakers/sneaker6_alt.jpg'
+                ],
+                currentImageIndex: 0
+              },
+              { 
+                name: 'Puma Cali Sport', 
+                price: 2000, 
+                images: [
+                  'images/sneakers/sneaker7.jpg',
+                  'images/sneakers/sneaker7_alt.jpg'
+                ],
+                currentImageIndex: 0
+              },
+              { 
+                name: 'Nike Blazer', 
+                price: 2100, 
+                images: [
+                  'images/sneakers/sneaker8.jpg',
+                  'images/sneakers/sneaker8_alt.jpg'
+                ],
+                currentImageIndex: 0
+              }
             ]
           },
           {
             name: "Kids' Sneakers",
             items: [
-              { name: 'Nike Kids Revolution', price: 1800, image: 'images/sneakers/sneaker9.jpg' },
-              { name: 'Adidas Kids Superstar', price: 1800, image: 'images/sneakers/sneaker10.jpg' },
-              { name: 'Puma Kids Smash', price: 1800, image: 'images/sneakers/sneaker11.jpg' },
-              { name: 'Nike Kids Tanjun', price: 1800, image: 'images/sneakers/sneaker12.jpg' }
+              { 
+                name: 'Nike Kids Revolution', 
+                price: 1800, 
+                images: [
+                  'images/sneakers/sneaker9.jpg',
+                  'images/sneakers/sneaker9_alt.jpg'
+                ],
+                currentImageIndex: 0
+              },
+              { 
+                name: 'Adidas Kids Superstar', 
+                price: 1800, 
+                images: [
+                  'images/sneakers/sneaker10.jpg',
+                  'images/sneakers/sneaker10_alt.jpg'
+                ],
+                currentImageIndex: 0
+              },
+              { 
+                name: 'Puma Kids Smash', 
+                price: 1800, 
+                images: [
+                  'images/sneakers/sneaker11.jpg',
+                  'images/sneakers/sneaker11_alt.jpg'
+                ],
+                currentImageIndex: 0
+              },
+              { 
+                name: 'Nike Kids Tanjun', 
+                price: 1800, 
+                images: [
+                  'images/sneakers/sneaker12.jpg',
+                  'images/sneakers/sneaker12_alt.jpg'
+                ],
+                currentImageIndex: 0
+              }
             ]
           }
         ]
@@ -971,12 +1097,40 @@
               subCategory.items.forEach(product => {
                 const productDiv = document.createElement('div');
                 productDiv.className = 'product';
-                productDiv.innerHTML = `
-                  <img src="${product.image}" alt="${product.name}" />
-                  <h3>${product.name}</h3>
-                  <p>Price: R${product.price.toLocaleString()}</p>
-                  <button class="add-to-cart">Add to Cart</button>
-                `;
+                
+                // Check if product has multiple images
+                if (product.images) {
+                  productDiv.innerHTML = `
+                    <div class="product-image-container">
+                      <img src="${product.images[product.currentImageIndex]}" alt="${product.name}" />
+                      <button class="toggle-image-btn" title="View other angles">🔄</button>
+                    </div>
+                    <h3>${product.name}</h3>
+                    <p>Price: R${product.price.toLocaleString()}</p>
+                    <button class="add-to-cart">Add to Cart</button>
+                  `;
+
+                  // Add toggle image functionality
+                  const toggleBtn = productDiv.querySelector('.toggle-image-btn');
+                  const productImg = productDiv.querySelector('img');
+                  
+                  toggleBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    product.currentImageIndex = (product.currentImageIndex + 1) % product.images.length;
+                    productImg.src = product.images[product.currentImageIndex];
+                  });
+                } else {
+                  // Handle products with single image
+                  productDiv.innerHTML = `
+                    <div class="product-image-container">
+                      <img src="${product.image}" alt="${product.name}" />
+                    </div>
+                    <h3>${product.name}</h3>
+                    <p>Price: R${product.price.toLocaleString()}</p>
+                    <button class="add-to-cart">Add to Cart</button>
+                  `;
+                }
+
                 productDiv.querySelector('.add-to-cart').addEventListener('click', () => {
                   addToCart(product);
                 });
@@ -999,11 +1153,25 @@
               const productDiv = document.createElement('div');
               productDiv.className = 'product';
               productDiv.innerHTML = `
-                <img src="${product.image}" alt="${product.name}" />
+                <div class="product-image-container">
+                  <img src="${product.images[product.currentImageIndex]}" alt="${product.name}" />
+                  <button class="toggle-image-btn" title="View other angles">🔄</button>
+                </div>
                 <h3>${product.name}</h3>
                 <p>Price: R${product.price.toLocaleString()}</p>
                 <button class="add-to-cart">Add to Cart</button>
               `;
+
+              // Add toggle image functionality
+              const toggleBtn = productDiv.querySelector('.toggle-image-btn');
+              const productImg = productDiv.querySelector('img');
+              
+              toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                product.currentImageIndex = (product.currentImageIndex + 1) % product.images.length;
+                productImg.src = product.images[product.currentImageIndex];
+              });
+
               productDiv.querySelector('.add-to-cart').addEventListener('click', () => {
                 addToCart(product);
               });
@@ -1065,13 +1233,42 @@
         matches.forEach(product => {
           const productDiv = document.createElement('div');
           productDiv.className = 'product';
-          productDiv.innerHTML = `
-            <img src="${product.image}" alt="${product.name}" />
-            <h3>${product.name}</h3>
-            <p>Category: ${product.category}</p>
-            <p>Price: R${product.price.toLocaleString()}</p>
-            <button class="add-to-cart">Add to Cart</button>
-          `;
+          
+          // Check if product has multiple images
+          if (product.images) {
+            productDiv.innerHTML = `
+              <div class="product-image-container">
+                <img src="${product.images[product.currentImageIndex]}" alt="${product.name}" />
+                <button class="toggle-image-btn" title="View other angles">🔄</button>
+              </div>
+              <h3>${product.name}</h3>
+              <p>Category: ${product.category}</p>
+              <p>Price: R${product.price.toLocaleString()}</p>
+              <button class="add-to-cart">Add to Cart</button>
+            `;
+
+            // Add toggle image functionality
+            const toggleBtn = productDiv.querySelector('.toggle-image-btn');
+            const productImg = productDiv.querySelector('img');
+            
+            toggleBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              product.currentImageIndex = (product.currentImageIndex + 1) % product.images.length;
+              productImg.src = product.images[product.currentImageIndex];
+            });
+          } else {
+            // Handle products with single image
+            productDiv.innerHTML = `
+              <div class="product-image-container">
+                <img src="${product.image}" alt="${product.name}" />
+              </div>
+              <h3>${product.name}</h3>
+              <p>Category: ${product.category}</p>
+              <p>Price: R${product.price.toLocaleString()}</p>
+              <button class="add-to-cart">Add to Cart</button>
+            `;
+          }
+
           productDiv.querySelector('.add-to-cart').addEventListener('click', () => {
             addToCart(product);
           });
