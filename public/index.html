@@ -1293,7 +1293,7 @@
     // Cart state
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    // Helper: add both click and touchstart listeners
+    // Helper: add both click and touchstart listeners (for image buttons only)
     function addClickAndTouch(element, handler) {
       element.addEventListener('click', handler);
       element.addEventListener('touchstart', function(e) {
@@ -1307,7 +1307,8 @@
     }
 
     // Event Listeners
-    addClickAndTouch(hamburger, () => {
+    // Use addClickAndTouch only for image toggle buttons, not for dropdown toggles
+    hamburger.addEventListener('click', () => {
       hamburger.classList.toggle('active');
       navLinks.classList.toggle('show');
       if (navLinks.classList.contains('show')) {
@@ -1317,7 +1318,7 @@
       }
     });
 
-    addClickAndTouch(darkModeToggle, () => {
+    darkModeToggle.addEventListener('click', () => {
       document.body.classList.toggle('dark');
     });
 
@@ -1326,7 +1327,7 @@
       renderCategories(text);
     });
 
-    addClickAndTouch(cartToggle, () => {
+    cartToggle.addEventListener('click', () => {
       if (cartDropdown.style.display === 'block') {
         cartDropdown.style.display = 'none';
       } else {
@@ -1447,7 +1448,7 @@
                     <p>Price: R${product.price.toLocaleString()}</p>
                     <button class="add-to-cart" style="min-width:44px;min-height:44px;">Add to Cart</button>
                   `;
-                  // Add toggle image functionality
+                  // Add toggle image functionality (use both click and touchstart)
                   const toggleBtn = productDiv.querySelector('.toggle-image-btn');
                   const productImg = productDiv.querySelector('img');
                   addClickAndTouch(toggleBtn, (e) => {
@@ -1466,12 +1467,13 @@
                     <button class="add-to-cart" style="min-width:44px;min-height:44px;">Add to Cart</button>
                   `;
                 }
-                addClickAndTouch(productDiv.querySelector('.add-to-cart'), () => {
+                productDiv.querySelector('.add-to-cart').addEventListener('click', () => {
                   addToCart(product);
                 });
                 subCategoryProducts.appendChild(productDiv);
               });
-              addClickAndTouch(subCategoryToggle, function() {
+              // Only use click for dropdown toggles
+              subCategoryToggle.addEventListener('click', function() {
                 const isOpen = subCategoryToggle.classList.toggle('open');
                 subCategoryProducts.style.display = isOpen ? '' : 'none';
                 subCategoryToggle.querySelector('.arrow-icon').classList.toggle('open', isOpen);
@@ -1494,7 +1496,7 @@
                 <p>Price: R${product.price.toLocaleString()}</p>
                 <button class="add-to-cart" style="min-width:44px;min-height:44px;">Add to Cart</button>
               `;
-              // Add toggle image functionality
+              // Add toggle image functionality (use both click and touchstart)
               const toggleBtn = productDiv.querySelector('.toggle-image-btn');
               const productImg = productDiv.querySelector('img');
               addClickAndTouch(toggleBtn, (e) => {
@@ -1502,14 +1504,15 @@
                 product.currentImageIndex = (product.currentImageIndex + 1) % product.images.length;
                 productImg.src = product.images[product.currentImageIndex];
               });
-              addClickAndTouch(productDiv.querySelector('.add-to-cart'), () => {
+              productDiv.querySelector('.add-to-cart').addEventListener('click', () => {
                 addToCart(product);
               });
               productList.appendChild(productDiv);
             });
             contentContainer.appendChild(productList);
           }
-          addClickAndTouch(toggle, function() {
+          // Only use click for dropdown toggles
+          toggle.addEventListener('click', function() {
             const isOpen = toggle.classList.toggle('open');
             contentContainer.style.display = isOpen ? '' : 'none';
             toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
@@ -1571,7 +1574,7 @@
               <p>Price: R${product.price.toLocaleString()}</p>
               <button class="add-to-cart" style="min-width:44px;min-height:44px;">Add to Cart</button>
             `;
-            // Add toggle image functionality
+            // Add toggle image functionality (use both click and touchstart)
             const toggleBtn = productDiv.querySelector('.toggle-image-btn');
             const productImg = productDiv.querySelector('img');
             addClickAndTouch(toggleBtn, (e) => {
