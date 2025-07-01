@@ -1293,8 +1293,21 @@
     // Cart state
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
+    // Helper: add both click and touchstart listeners
+    function addClickAndTouch(element, handler) {
+      element.addEventListener('click', handler);
+      element.addEventListener('touchstart', function(e) {
+        // Prevent double firing
+        if (!e.target.hasAttribute('data-touched')) {
+          e.target.setAttribute('data-touched', 'true');
+          handler(e);
+          setTimeout(() => e.target.removeAttribute('data-touched'), 500);
+        }
+      });
+    }
+
     // Event Listeners
-    hamburger.addEventListener('click', () => {
+    addClickAndTouch(hamburger, () => {
       hamburger.classList.toggle('active');
       navLinks.classList.toggle('show');
       if (navLinks.classList.contains('show')) {
@@ -1304,7 +1317,7 @@
       }
     });
 
-    darkModeToggle.addEventListener('click', () => {
+    addClickAndTouch(darkModeToggle, () => {
       document.body.classList.toggle('dark');
     });
 
@@ -1313,7 +1326,7 @@
       renderCategories(text);
     });
 
-    cartToggle.addEventListener('click', () => {
+    addClickAndTouch(cartToggle, () => {
       if (cartDropdown.style.display === 'block') {
         cartDropdown.style.display = 'none';
       } else {
@@ -1337,23 +1350,19 @@
 
     checkoutForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-
       if (cart.length === 0) {
         alert('Your cart is empty! Add some products first.');
         return;
       }
       loadingDiv.style.display = 'block';
-
       const specialInstructions = document.getElementById('special-instructions').value.trim();
       const uploadInput = document.getElementById('upload-image');
       const uploadedFile = uploadInput.files[0];
       const email = checkoutForm.querySelector('input[name="email"]').value;
-
       let orderSummary = 'Order Summary:\n\n';
       cart.forEach(item => {
         orderSummary += `${item.name} - R${item.price.toLocaleString()}\n`;
       });
-
       const formData = new FormData();
       formData.append('specialInstructions', specialInstructions);
       formData.append('uploadImage', uploadedFile);
@@ -1361,20 +1370,16 @@
       formData.append('cart', JSON.stringify(cart));
       formData.append('email', email);
       formData.append('shippingMethod', shippingMethod.value);
-
       if (shippingMethod.value === 'pudo') {
         const pudoLocation = document.getElementById('pudo-location').value.trim();
         formData.append('pudoLocation', pudoLocation);
       }
-
       try {
         const response = await fetch('/checkout', {
           method: 'POST',
           body: formData,
         });
-
         loadingDiv.style.display = 'none';
-
         if (response.ok) {
           alert('Order placed!\n\n' + orderSummary);
           clearCart();
@@ -1391,15 +1396,12 @@
     // Functions
     function renderCategories(filterText = '') {
       categoriesContainer.innerHTML = '';
-
       if (filterText.trim() === '') {
         products.forEach(category => {
           if (!category.subCategories && !category.items) return;
-          
           const categorySection = document.createElement('section');
           categorySection.className = 'product-category';
           categorySection.id = category.category.toLowerCase();
-
           const toggle = document.createElement('div');
           toggle.className = 'toggle-category';
           toggle.tabIndex = 0;
@@ -1409,10 +1411,8 @@
             ${category.category}
             <span class="arrow-icon">&#9654;</span>
           `;
-
           const preview = document.createElement('div');
           preview.className = 'category-preview';
-          
           let firstImage;
           if (category.subCategories) {
             firstImage = category.subCategories[0]?.items[0]?.image;
@@ -1420,10 +1420,8 @@
             firstImage = category.items[0]?.image;
           }
           preview.innerHTML = firstImage ? `<img src="${firstImage}" alt="${category.category} Preview"/>` : `<div>No image found</div>`;
-
           const contentContainer = document.createElement('div');
           contentContainer.style.display = 'none';
-
           if (category.subCategories) {
             category.subCategories.forEach(subCategory => {
               const subCategoryToggle = document.createElement('div');
@@ -1432,32 +1430,27 @@
                 ${subCategory.name}
                 <span class="arrow-icon">&#9654;</span>
               `;
-
               const subCategoryProducts = document.createElement('div');
               subCategoryProducts.className = 'product-list';
               subCategoryProducts.style.display = 'none';
-
               subCategory.items.forEach(product => {
                 const productDiv = document.createElement('div');
                 productDiv.className = 'product';
-                
                 // Check if product has multiple images
                 if (product.images) {
                   productDiv.innerHTML = `
                     <div class="product-image-container">
                       <img src="${product.images[product.currentImageIndex]}" alt="${product.name}" />
-                      <button class="toggle-image-btn" title="View other angles">🔄</button>
+                      <button class="toggle-image-btn" title="View other angles" style="min-width:44px;min-height:44px;">🔄</button>
                     </div>
                     <h3>${product.name}</h3>
                     <p>Price: R${product.price.toLocaleString()}</p>
-                    <button class="add-to-cart">Add to Cart</button>
+                    <button class="add-to-cart" style="min-width:44px;min-height:44px;">Add to Cart</button>
                   `;
-
                   // Add toggle image functionality
                   const toggleBtn = productDiv.querySelector('.toggle-image-btn');
                   const productImg = productDiv.querySelector('img');
-                  
-                  toggleBtn.addEventListener('click', (e) => {
+                  addClickAndTouch(toggleBtn, (e) => {
                     e.stopPropagation();
                     product.currentImageIndex = (product.currentImageIndex + 1) % product.images.length;
                     productImg.src = product.images[product.currentImageIndex];
@@ -1470,22 +1463,19 @@
                     </div>
                     <h3>${product.name}</h3>
                     <p>Price: R${product.price.toLocaleString()}</p>
-                    <button class="add-to-cart">Add to Cart</button>
+                    <button class="add-to-cart" style="min-width:44px;min-height:44px;">Add to Cart</button>
                   `;
                 }
-
-                productDiv.querySelector('.add-to-cart').addEventListener('click', () => {
+                addClickAndTouch(productDiv.querySelector('.add-to-cart'), () => {
                   addToCart(product);
                 });
                 subCategoryProducts.appendChild(productDiv);
               });
-
-              subCategoryToggle.addEventListener('click', function() {
+              addClickAndTouch(subCategoryToggle, function() {
                 const isOpen = subCategoryToggle.classList.toggle('open');
                 subCategoryProducts.style.display = isOpen ? '' : 'none';
                 subCategoryToggle.querySelector('.arrow-icon').classList.toggle('open', isOpen);
               });
-
               contentContainer.appendChild(subCategoryToggle);
               contentContainer.appendChild(subCategoryProducts);
             });
@@ -1498,32 +1488,28 @@
               productDiv.innerHTML = `
                 <div class="product-image-container">
                   <img src="${product.images[product.currentImageIndex]}" alt="${product.name}" />
-                  <button class="toggle-image-btn" title="View other angles">🔄</button>
+                  <button class="toggle-image-btn" title="View other angles" style="min-width:44px;min-height:44px;">🔄</button>
                 </div>
                 <h3>${product.name}</h3>
                 <p>Price: R${product.price.toLocaleString()}</p>
-                <button class="add-to-cart">Add to Cart</button>
+                <button class="add-to-cart" style="min-width:44px;min-height:44px;">Add to Cart</button>
               `;
-
               // Add toggle image functionality
               const toggleBtn = productDiv.querySelector('.toggle-image-btn');
               const productImg = productDiv.querySelector('img');
-              
-              toggleBtn.addEventListener('click', (e) => {
+              addClickAndTouch(toggleBtn, (e) => {
                 e.stopPropagation();
                 product.currentImageIndex = (product.currentImageIndex + 1) % product.images.length;
                 productImg.src = product.images[product.currentImageIndex];
               });
-
-              productDiv.querySelector('.add-to-cart').addEventListener('click', () => {
+              addClickAndTouch(productDiv.querySelector('.add-to-cart'), () => {
                 addToCart(product);
               });
               productList.appendChild(productDiv);
             });
             contentContainer.appendChild(productList);
           }
-
-          toggle.addEventListener('click', function() {
+          addClickAndTouch(toggle, function() {
             const isOpen = toggle.classList.toggle('open');
             contentContainer.style.display = isOpen ? '' : 'none';
             toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
@@ -1534,7 +1520,6 @@
               preview.style.display = 'none';
             }
           });
-
           categorySection.appendChild(toggle);
           categorySection.appendChild(preview);
           categorySection.appendChild(contentContainer);
@@ -1559,12 +1544,10 @@
             });
           }
         });
-
         if (matches.length === 0) {
           categoriesContainer.innerHTML = "<p style='padding:2rem;text-align:center;'>No products match your search.</p>";
           return;
         }
-
         const resultsSection = document.createElement('section');
         resultsSection.className = 'product-category';
         resultsSection.id = 'search-results';
@@ -1576,25 +1559,22 @@
         matches.forEach(product => {
           const productDiv = document.createElement('div');
           productDiv.className = 'product';
-          
           // Check if product has multiple images
           if (product.images) {
             productDiv.innerHTML = `
               <div class="product-image-container">
                 <img src="${product.images[product.currentImageIndex]}" alt="${product.name}" />
-                <button class="toggle-image-btn" title="View other angles">🔄</button>
+                <button class="toggle-image-btn" title="View other angles" style="min-width:44px;min-height:44px;">🔄</button>
               </div>
               <h3>${product.name}</h3>
               <p>Category: ${product.category}</p>
               <p>Price: R${product.price.toLocaleString()}</p>
-              <button class="add-to-cart">Add to Cart</button>
+              <button class="add-to-cart" style="min-width:44px;min-height:44px;">Add to Cart</button>
             `;
-
             // Add toggle image functionality
             const toggleBtn = productDiv.querySelector('.toggle-image-btn');
             const productImg = productDiv.querySelector('img');
-            
-            toggleBtn.addEventListener('click', (e) => {
+            addClickAndTouch(toggleBtn, (e) => {
               e.stopPropagation();
               product.currentImageIndex = (product.currentImageIndex + 1) % product.images.length;
               productImg.src = product.images[product.currentImageIndex];
@@ -1608,11 +1588,10 @@
               <h3>${product.name}</h3>
               <p>Category: ${product.category}</p>
               <p>Price: R${product.price.toLocaleString()}</p>
-              <button class="add-to-cart">Add to Cart</button>
+              <button class="add-to-cart" style="min-width:44px;min-height:44px;">Add to Cart</button>
             `;
           }
-
-          productDiv.querySelector('.add-to-cart').addEventListener('click', () => {
+          addClickAndTouch(productDiv.querySelector('.add-to-cart'), () => {
             addToCart(product);
           });
           productList.appendChild(productDiv);
@@ -1641,7 +1620,7 @@
         html += '</ul>';
         const total = cart.reduce((acc, cur) => acc + cur.price, 0);
         html += `<strong>Total: R${total.toLocaleString()}</strong>`;
-        html += `<button class="clear-cart-btn" id="clear-cart-btn">Clear Cart</button>`;
+        html += `<button class="clear-cart-btn" id="clear-cart-btn" style="min-width:44px;min-height:44px;">Clear Cart</button>`;
         cartDropdown.innerHTML = html;
         document.getElementById('clear-cart-btn').addEventListener('click', clearCart);
       }
