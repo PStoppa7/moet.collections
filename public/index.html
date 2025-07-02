@@ -1525,11 +1525,21 @@
                   // Add toggle image functionality (use both click and touchstart)
                   const toggleBtn = productDiv.querySelector('.toggle-image-btn');
                   const productImg = productDiv.querySelector('img');
-                  addClickAndTouch(toggleBtn, (e) => {
-                    e.stopPropagation();
-                    product.currentImageIndex = (product.currentImageIndex + 1) % product.images.length;
-                    productImg.src = product.images[product.currentImageIndex];
-                  });
+                  const productTitle = productDiv.querySelector('h3');
+                  if (productImg) {
+                    productImg.style.cursor = 'pointer';
+                    productImg.addEventListener('click', (e) => {
+                      e.stopPropagation();
+                      openProductModal(product, category.category, subCategory ? subCategory.name : null);
+                    });
+                  }
+                  if (productTitle) {
+                    productTitle.style.cursor = 'pointer';
+                    productTitle.addEventListener('click', (e) => {
+                      e.stopPropagation();
+                      openProductModal(product, category.category, subCategory ? subCategory.name : null);
+                    });
+                  }
                 } else {
                   // Handle products with single image
                   productDiv.innerHTML = `
@@ -1573,11 +1583,21 @@
               // Add toggle image functionality (use both click and touchstart)
               const toggleBtn = productDiv.querySelector('.toggle-image-btn');
               const productImg = productDiv.querySelector('img');
-              addClickAndTouch(toggleBtn, (e) => {
-                e.stopPropagation();
-                product.currentImageIndex = (product.currentImageIndex + 1) % product.images.length;
-                productImg.src = product.images[product.currentImageIndex];
-              });
+              const productTitle = productDiv.querySelector('h3');
+              if (productImg) {
+                productImg.style.cursor = 'pointer';
+                productImg.addEventListener('click', (e) => {
+                  e.stopPropagation();
+                  openProductModal(product, category.category, null);
+                });
+              }
+              if (productTitle) {
+                productTitle.style.cursor = 'pointer';
+                productTitle.addEventListener('click', (e) => {
+                  e.stopPropagation();
+                  openProductModal(product, category.category, null);
+                });
+              }
               productDiv.querySelector('.add-to-cart').addEventListener('click', () => {
                 addToCart(product);
               });
@@ -1651,11 +1671,21 @@
             // Add toggle image functionality (use both click and touchstart)
             const toggleBtn = productDiv.querySelector('.toggle-image-btn');
             const productImg = productDiv.querySelector('img');
-            addClickAndTouch(toggleBtn, (e) => {
-              e.stopPropagation();
-              product.currentImageIndex = (product.currentImageIndex + 1) % product.images.length;
-              productImg.src = product.images[product.currentImageIndex];
-            });
+            const productTitle = productDiv.querySelector('h3');
+            if (productImg) {
+              productImg.style.cursor = 'pointer';
+              productImg.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openProductModal(product, product.category, null);
+              });
+            }
+            if (productTitle) {
+              productTitle.style.cursor = 'pointer';
+              productTitle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openProductModal(product, product.category, null);
+              });
+            }
           } else {
             // Handle products with single image
             productDiv.innerHTML = `
