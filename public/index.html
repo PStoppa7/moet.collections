@@ -12,6 +12,12 @@
   <meta property="og:image" content="https://yourdomain.com/images/logo.jpg" />
   <meta property="og:url" content="https://yourdomain.com/" />
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="keywords" content="sneakers, iPhones, curtains, carpets, blankets, clothes, perfumes, Moeti Collections, shop, South Africa, electronics, home goods, fashion, deals, online store" />
+  <meta name="author" content="Moeti Collections" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:title" content="Moeti Collections - Shop Now" />
+  <meta name="twitter:description" content="Top deals on sneakers, electronics, home goods and more." />
+  <meta name="twitter:image" content="https://yourdomain.com/images/logo.jpg" />
   
   <style>
     * {
@@ -648,6 +654,57 @@
         font-size: 12px;
       }
     }
+
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.3s;
+    }
+    .modal {
+      background: #fff;
+      border-radius: 10px;
+      max-width: 95vw;
+      width: 400px;
+      padding: 2rem 1.5rem 1.5rem 1.5rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      position: relative;
+      text-align: center;
+      animation: fadeIn 0.3s;
+    }
+    .modal img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    .modal .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .modal .close-modal:hover {
+      background: #c0392b;
+    }
+    .modal h3 {
+      margin-bottom: 0.5rem;
+    }
+    .modal p {
+      margin-bottom: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -656,7 +713,7 @@
       <img src="/images/logo.jpg" alt="Moeti Collections Logo" />
       Moet Collections
     </div>
-    <div class="hamburger" id="hamburger">
+    <div class="hamburger" id="hamburger" tabindex="0" aria-label="Open navigation menu">
       <span></span>
       <span></span>
       <span></span>
@@ -739,8 +796,28 @@
         <i class="fas fa-envelope"></i>
       </a>
     </div>
+    <div style="margin-top:15px;">
+      <a href="#" style="color:#fff; margin:0 8px; text-decoration:underline;">Privacy Policy</a> |
+      <a href="#" style="color:#fff; margin:0 8px; text-decoration:underline;">Terms of Service</a> |
+      <a href="mailto:sebogodiphenyo7@gmail.com" style="color:#fff; margin:0 8px; text-decoration:underline;">Contact</a>
+    </div>
     <p style="margin-top:10px; font-size:0.9rem;">&copy; 2025 Moeti Collections. All rights reserved.</p>
   </footer>
+
+  <div id="toast" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:14px 28px;border-radius:6px;font-size:1rem;z-index:2000;display:none;box-shadow:0 4px 16px rgba(0,0,0,0.18);transition:opacity 0.4s;opacity:0;">Added to cart!</div>
+
+  <!-- Product Details Modal -->
+  <div id="modal-overlay" class="modal-overlay" style="display:none;" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal" id="modal-content">
+      <button class="close-modal" id="close-modal" aria-label="Close product details">&times;</button>
+      <img id="modal-image" src="" alt="" />
+      <h3 id="modal-title"></h3>
+      <p id="modal-category"></p>
+      <p id="modal-price"></p>
+      <p id="modal-description" style="color:#555;"></p>
+      <button class="add-to-cart" id="modal-add-to-cart">Add to Cart</button>
+    </div>
+  </div>
 
   <script>
     // Products data
@@ -1028,7 +1105,7 @@
             ]
           },
           {
-          name:"Lving Room carpets",
+          name:"Living Room carpets",
           items:[
                { 
                 name: '3D Living Room Mat Set',
@@ -1081,11 +1158,11 @@
             ]
           },
           {
-            name: "Valvet Sherpa Blankets",
+            name: "Velvet Sherpa Blankets",
             items: [
-              { name: 'Valvet Sherpa Blanket', price: 480, image: 'images/blanket4.jpg' },
-              { name: 'Valvet Sherpa Blanket', price: 480, image: 'images/blanket5.jpg' },
-              { name: 'Valvet Sherpa Blanket', price: 480, image: 'images/blanket6.jpg' }
+              { name: 'Velvet Sherpa Blanket', price: 480, image: 'images/blanket4.jpg' },
+              { name: 'Velvet Sherpa Blanket', price: 480, image: 'images/blanket5.jpg' },
+              { name: 'Velvet Sherpa Blanket', price: 480, image: 'images/blanket6.jpg' }
             ]
           },
                 {
@@ -1316,6 +1393,7 @@
 
     darkModeToggle.addEventListener('click', () => {
       document.body.classList.toggle('dark');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark'));
     });
 
     productSearch.addEventListener('input', (e) => {
@@ -1416,7 +1494,7 @@
           } else {
             firstImage = category.items[0]?.image;
           }
-          preview.innerHTML = firstImage ? `<img src="${firstImage}" alt="${category.category} Preview"/>` : `<div>No image found</div>`;
+          preview.innerHTML = firstImage ? `<img src="${firstImage}" alt="${category.category} Preview" loading="lazy"/>` : `<div>No image found</div>`;
           const contentContainer = document.createElement('div');
           contentContainer.style.display = 'none';
           if (category.subCategories) {
@@ -1437,7 +1515,7 @@
                 if (product.images) {
                   productDiv.innerHTML = `
                     <div class="product-image-container">
-                      <img src="${product.images[product.currentImageIndex]}" alt="${product.name}" />
+                      <img src="${product.images[product.currentImageIndex]}" alt="${product.name} - ${product.category || ''}" loading="lazy" />
                       <button class="toggle-image-btn" title="View other angles" style="min-width:44px;min-height:44px;">🔄</button>
                     </div>
                     <h3>${product.name}</h3>
@@ -1456,7 +1534,7 @@
                   // Handle products with single image
                   productDiv.innerHTML = `
                     <div class="product-image-container">
-                      <img src="${product.image}" alt="${product.name}" />
+                      <img src="${product.image}" alt="${product.name} - ${product.category || ''}" loading="lazy" />
                     </div>
                     <h3>${product.name}</h3>
                     <p>Price: R${product.price.toLocaleString()}</p>
@@ -1485,7 +1563,7 @@
               productDiv.className = 'product';
               productDiv.innerHTML = `
                 <div class="product-image-container">
-                  <img src="${product.images[product.currentImageIndex]}" alt="${product.name}" />
+                  <img src="${product.images[product.currentImageIndex]}" alt="${product.name} - ${product.category || ''}" loading="lazy" />
                   <button class="toggle-image-btn" title="View other angles" style="min-width:44px;min-height:44px;">🔄</button>
                 </div>
                 <h3>${product.name}</h3>
@@ -1562,7 +1640,7 @@
           if (product.images) {
             productDiv.innerHTML = `
               <div class="product-image-container">
-                <img src="${product.images[product.currentImageIndex]}" alt="${product.name}" />
+                <img src="${product.images[product.currentImageIndex]}" alt="${product.name} - ${product.category || ''}" loading="lazy" />
                 <button class="toggle-image-btn" title="View other angles" style="min-width:44px;min-height:44px;">🔄</button>
               </div>
               <h3>${product.name}</h3>
@@ -1582,7 +1660,7 @@
             // Handle products with single image
             productDiv.innerHTML = `
               <div class="product-image-container">
-                <img src="${product.image}" alt="${product.name}" />
+                <img src="${product.image}" alt="${product.name} - ${product.category || ''}" loading="lazy" />
               </div>
               <h3>${product.name}</h3>
               <p>Category: ${product.category}</p>
@@ -1604,6 +1682,7 @@
       cart.push(product);
       localStorage.setItem('cart', JSON.stringify(cart));
       updateCartUI();
+      showToast('Added to cart!');
     }
 
     function updateCartUI() {
@@ -1613,8 +1692,8 @@
         cartDropdown.innerHTML = '<p class="empty">Your cart is empty</p>';
       } else {
         let html = '<ul>';
-        cart.forEach((item) => {
-          html += `<li>${item.name} - R${item.price.toLocaleString()}</li>`;
+        cart.forEach((item, idx) => {
+          html += `<li>${item.name} - R${item.price.toLocaleString()} <button class="remove-item-btn" data-idx="${idx}" style="margin-left:8px;background:#e74c3c;color:#fff;border:none;border-radius:3px;padding:2px 8px;cursor:pointer;">Remove</button></li>`;
         });
         html += '</ul>';
         const total = cart.reduce((acc, cur) => acc + cur.price, 0);
@@ -1622,6 +1701,15 @@
         html += `<button class="clear-cart-btn" id="clear-cart-btn" style="min-width:44px;min-height:44px;">Clear Cart</button>`;
         cartDropdown.innerHTML = html;
         document.getElementById('clear-cart-btn').addEventListener('click', clearCart);
+        // Add remove item listeners
+        cartDropdown.querySelectorAll('.remove-item-btn').forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            const idx = parseInt(this.getAttribute('data-idx'));
+            cart.splice(idx, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartUI();
+          });
+        });
       }
     }
 
@@ -1631,9 +1719,68 @@
       updateCartUI();
     }
 
+    // Toast notification functions
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.display = 'block';
+      toast.style.opacity = '1';
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => {
+          toast.style.display = 'none';
+        }, 400);
+      }, 1800);
+    }
+
     // Initial render
     renderCategories();
     updateCartUI();
+
+    // On load
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark');
+    }
+
+    // Product details modal logic
+    const modalOverlay = document.getElementById('modal-overlay');
+    const modalImage = document.getElementById('modal-image');
+    const modalTitle = document.getElementById('modal-title');
+    const modalCategory = document.getElementById('modal-category');
+    const modalPrice = document.getElementById('modal-price');
+    const modalDescription = document.getElementById('modal-description');
+    const modalAddToCart = document.getElementById('modal-add-to-cart');
+    const closeModalBtn = document.getElementById('close-modal');
+    let modalProduct = null;
+    function openProductModal(product, category, subCategory) {
+      modalProduct = product;
+      let imgSrc = product.image || (product.images ? product.images[product.currentImageIndex] : '');
+      modalImage.src = imgSrc;
+      modalImage.alt = product.name + (category ? ' - ' + category : '');
+      modalTitle.textContent = product.name;
+      modalCategory.textContent = category ? (subCategory ? `${category} > ${subCategory}` : category) : '';
+      modalPrice.textContent = 'Price: R' + product.price.toLocaleString();
+      modalDescription.textContent = product.description || '';
+      modalOverlay.style.display = 'flex';
+      modalOverlay.focus();
+    }
+    function closeProductModal() {
+      modalOverlay.style.display = 'none';
+      modalProduct = null;
+    }
+    closeModalBtn.addEventListener('click', closeProductModal);
+    modalOverlay.addEventListener('click', function(e) {
+      if (e.target === modalOverlay) closeProductModal();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (modalOverlay.style.display === 'flex' && (e.key === 'Escape' || e.key === 'Esc')) {
+        closeProductModal();
+      }
+    });
+    modalAddToCart.addEventListener('click', function() {
+      if (modalProduct) addToCart(modalProduct);
+      closeProductModal();
+    });
   </script>
 </body>
 </html>
