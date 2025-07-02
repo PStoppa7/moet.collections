@@ -1557,7 +1557,8 @@
                 subCategoryProducts.appendChild(productDiv);
               });
               // Only use click for dropdown toggles
-              subCategoryToggle.addEventListener('click', function() {
+              subCategoryToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
                 const isOpen = subCategoryToggle.classList.toggle('open');
                 subCategoryProducts.style.display = isOpen ? '' : 'none';
                 subCategoryToggle.querySelector('.arrow-icon').classList.toggle('open', isOpen);
@@ -1606,7 +1607,8 @@
             contentContainer.appendChild(productList);
           }
           // Only use click for dropdown toggles
-          toggle.addEventListener('click', function() {
+          toggle.addEventListener('click', function(e) {
+            e.stopPropagation();
             const isOpen = toggle.classList.toggle('open');
             contentContainer.style.display = isOpen ? '' : 'none';
             toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
