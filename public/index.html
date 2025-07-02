@@ -1526,11 +1526,11 @@
                   const toggleBtn = productDiv.querySelector('.toggle-image-btn');
                   const productImg = productDiv.querySelector('img');
                   const productTitle = productDiv.querySelector('h3');
-                  if (productImg) {
-                    productImg.style.cursor = 'pointer';
-                    productImg.addEventListener('click', (e) => {
+                  if (toggleBtn && productImg && product.images) {
+                    addClickAndTouch(toggleBtn, (e) => {
                       e.stopPropagation();
-                      openProductModal(product, category.category, subCategory.name);
+                      product.currentImageIndex = (product.currentImageIndex + 1) % product.images.length;
+                      productImg.src = product.images[product.currentImageIndex];
                     });
                   }
                   if (productTitle) {
@@ -1585,11 +1585,11 @@
               const toggleBtn = productDiv.querySelector('.toggle-image-btn');
               const productImg = productDiv.querySelector('img');
               const productTitle = productDiv.querySelector('h3');
-              if (productImg) {
-                productImg.style.cursor = 'pointer';
-                productImg.addEventListener('click', (e) => {
+              if (toggleBtn && productImg && product.images) {
+                addClickAndTouch(toggleBtn, (e) => {
                   e.stopPropagation();
-                  openProductModal(product, category.category, null);
+                  product.currentImageIndex = (product.currentImageIndex + 1) % product.images.length;
+                  productImg.src = product.images[product.currentImageIndex];
                 });
               }
               if (productTitle) {
@@ -1674,11 +1674,11 @@
             const toggleBtn = productDiv.querySelector('.toggle-image-btn');
             const productImg = productDiv.querySelector('img');
             const productTitle = productDiv.querySelector('h3');
-            if (productImg) {
-              productImg.style.cursor = 'pointer';
-              productImg.addEventListener('click', (e) => {
+            if (toggleBtn && productImg && product.images) {
+              addClickAndTouch(toggleBtn, (e) => {
                 e.stopPropagation();
-                openProductModal(product, product.category, null);
+                product.currentImageIndex = (product.currentImageIndex + 1) % product.images.length;
+                productImg.src = product.images[product.currentImageIndex];
               });
             }
             if (productTitle) {
