@@ -1530,14 +1530,14 @@
                     productImg.style.cursor = 'pointer';
                     productImg.addEventListener('click', (e) => {
                       e.stopPropagation();
-                      openProductModal(product, category.category, subCategory ? subCategory.name : null);
+                      openProductModal(product, category.category, subCategory.name);
                     });
                   }
                   if (productTitle) {
                     productTitle.style.cursor = 'pointer';
                     productTitle.addEventListener('click', (e) => {
                       e.stopPropagation();
-                      openProductModal(product, category.category, subCategory ? subCategory.name : null);
+                      openProductModal(product, category.category, subCategory.name);
                     });
                   }
                 } else {
