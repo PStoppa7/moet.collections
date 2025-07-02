@@ -107,6 +107,7 @@
       gap: 1rem;
       list-style: none;
       transition: all 0.3s ease;
+      z-index: 1001;
     }
 
     .nav-links a {
@@ -1311,11 +1312,6 @@
     hamburger.addEventListener('click', () => {
       hamburger.classList.toggle('active');
       navLinks.classList.toggle('show');
-      if (navLinks.classList.contains('show')) {
-        main.style.marginTop = navLinks.offsetHeight + 'px';
-      } else {
-        main.style.marginTop = '0';
-      }
     });
 
     darkModeToggle.addEventListener('click', () => {
